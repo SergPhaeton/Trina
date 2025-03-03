@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трина. Язык шифрования</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button {
+            font-size: 16px;
+            margin: 5px;
+            padding: 10px;
+            display: inline-block;
+        }
+            .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    
+    <h2>Обычный текст:</h2>
+    <textarea id="plainText" oninput="encryptText()"></textarea>
+    
+    
+    <h2>Трина:</h2>
+    <textarea id="encryptedText" oninput="decryptText()"></textarea>
+
+        
+
+
+    
+    <script>
+        const key = "secret"; // Ключ для XOR-шифрования
+
+        function xorEncryptDecrypt(text, key) {
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return result;
+        }
+
+        function base85Encode(text) {
+            return btoa(unescape(encodeURIComponent(text))); // Используем Base64 вместо Base85 для браузеров
+        }
+
+        function base85Decode(text) {
+            return decodeURIComponent(escape(atob(text)));
+        }
+
+        function encryptText() {
+            let plainText = document.getElementById("plainText").value;
+            let encrypted = xorEncryptDecrypt(plainText, key);
+            document.getElementById("encryptedText").value = base85Encode(encrypted);
+        }
+
+        function decryptText() {
+            let encryptedText = document.getElementById("encryptedText").value;
+            try {
+                let decoded = base85Decode(encryptedText);
+                document.getElementById("plainText").value = xorEncryptDecrypt(decoded, key);
+            } catch (error) {
+                document.getElementById("plainText").value = "Ошибка расшифровки";
+            }
+        }
+
+        function copyText(elementId) {
+            let textArea = document.getElementById(elementId);
+            textArea.select();
+            document.execCommand("copy");
+        }
+
+        function clearText(elementId) {
+            document.getElementById(elementId).value = "";
+        }
+            function pasteText(elementId) {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById(elementId).value = text;
+                if (elementId === 'plainText') encryptText();
+                if (elementId === 'encryptedText') decryptText();
+            });
+        }
+    </script>
+</body>
+</html>
