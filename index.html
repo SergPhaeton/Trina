@@ -23,36 +23,35 @@
             margin-left: auto;
             margin-right: auto;
         }
-        button {
-            font-size: 16px;
-            margin: 5px;
-            padding: 10px;
-            display: inline-block;
-        }
-            .button-container {
+        .button-container {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-top: 10px;
         }
+        button {
+            font-size: 16px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
-    
-    
     <h2>Обычный текст:</h2>
     <textarea id="plainText" oninput="encryptText()"></textarea>
-    
+    <div class="button-container">
+        <button onclick="pasteText('plainText')">Вставить</button>
+        <button onclick="copyText('plainText')">Копировать</button>
+    </div>
     
     <h2>Трина:</h2>
     <textarea id="encryptedText" oninput="decryptText()"></textarea>
-
-        
-
-
+    <div class="button-container">
+        <button onclick="pasteText('encryptedText')">Вставить</button>
+        <button onclick="copyText('encryptedText')">Копировать</button>
+    </div>
     
     <script>
-        const key = "secret"; // Ключ для XOR-шифрования
+        const key = "secret";
 
         function xorEncryptDecrypt(text, key) {
             let result = "";
@@ -63,7 +62,7 @@
         }
 
         function base85Encode(text) {
-            return btoa(unescape(encodeURIComponent(text))); // Используем Base64 вместо Base85 для браузеров
+            return btoa(unescape(encodeURIComponent(text)));
         }
 
         function base85Decode(text) {
@@ -92,30 +91,13 @@
             document.execCommand("copy");
         }
 
-        function clearText(elementId) {
-            document.getElementById(elementId).value = "";
-        }
-            function pasteText(elementId) {
+        function pasteText(elementId) {
             navigator.clipboard.readText().then(text => {
                 document.getElementById(elementId).value = text;
                 if (elementId === 'plainText') encryptText();
                 if (elementId === 'encryptedText') decryptText();
             });
         }
-            // Блокировка правой кнопки и клавиш DevTools
-        document.addEventListener("contextmenu", event => {
-            if (!navigator.userAgent.toLowerCase().includes('android')) {
-                event.preventDefault();
-            }
-        });
-        document.addEventListener("keydown", event => {
-            if (event.key === "F12" || 
-                (event.ctrlKey && event.shiftKey && event.key === "I") || 
-                (event.ctrlKey && event.key === "u")) {
-                event.preventDefault();
-                alert("Доступ к исходному коду запрещён!");
-            }
-        });
     </script>
 </body>
 </html>
