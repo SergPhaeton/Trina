@@ -39,15 +39,17 @@
     <h2>Обычный текст:</h2>
     <textarea id="plainText" oninput="encryptText()"></textarea>
     <div class="button-container">
-        <button onclick="pasteText('plainText')">Вставить</button>
+        <button onclick="selectAll('plainText')">Выбрать все</button>
         <button onclick="copyText('plainText')">Копировать</button>
+        <button onclick="pasteText('plainText')">Вставить</button>
     </div>
     
     <h2>Трина:</h2>
     <textarea id="encryptedText" oninput="decryptText()"></textarea>
     <div class="button-container">
-        <button onclick="pasteText('encryptedText')">Вставить</button>
+        <button onclick="selectAll('encryptedText')">Выбрать все</button>
         <button onclick="copyText('encryptedText')">Копировать</button>
+        <button onclick="pasteText('encryptedText')">Вставить</button>
     </div>
     
     <script>
@@ -97,6 +99,10 @@
                 if (elementId === 'plainText') encryptText();
                 if (elementId === 'encryptedText') decryptText();
             });
+        }
+            function selectAll(elementId) {
+            let textArea = document.getElementById(elementId);
+            textArea.select();
         }
     </script>
 </body>
